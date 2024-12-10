@@ -32,6 +32,10 @@ ex) localhost(호스트주소):8080(포트)
 
 포트는 들어가는 곳의 상세 주소이다. 인터넷을 들어갈 때 default value port 는 80 이다.
 
+SQL(Structured Query Language) -- 구조적 질의어(시퀄)
+
+DDL(DataBase Definition Language) -- 데이터베이스 정의어
+DML(DataBase Manipulation Language) -- 데이터베이스 조작어 crud에 관련된 것들이 DML이라고 한다.
 
 sql query 문법 초반
 
@@ -108,3 +112,7 @@ mysql> select * from city;
 |   17 | Almere                            | NLD         | Flevoland            |     142465 |
 |   18 | Arnhem                            | NLD         | Gelderland           |     138020 |
 |   19 | Zaanstad                          | NLD         | Noord-Holland        |     135621 |
+
+mysql 을 나가는 방법은 exit를 눌러 탈출한다.
+
+
