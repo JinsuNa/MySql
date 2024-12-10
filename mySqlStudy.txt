@@ -1,0 +1,110 @@
+database
+
+DBMS (DataBaseManagment System)
+
+ORM (Object Relational Model) - 요새는 거의 다 지원을 한다.
+
+데이터베이스 (테이블 - 엑셀 시트) --- class     데이터베이스에 있는 내용을 읽어오면 클래스에 있는것처럼 박혀 사용이 가능하다.
+
+
+CRUD (Create Read Update Delete)
+Create	- 데이터를 입력
+Read	- 저장 된 데이터를 읽어오는 것
+Update	- 수정
+Delete	- 삭제
+
+Query(질의어)Language
+
+Query 데이터베이스와 나와 주고받는 언어
+
+Server 데이터를 연동하여 처리하는 기술
+-	JPA
+-	Mybatis 
+
+
+localhost == 127.0.0.1(내 컴퓨터)
+
+0.0.0.0(모든 ip주소)
+
+ex) localhost(호스트주소):8080(포트)
+
+포트: 0~1024 까지는 예약이 되어있다.
+
+포트는 들어가는 곳의 상세 주소이다. 인터넷을 들어갈 때 default value port 는 80 이다.
+
+
+sql query 문법 초반
+
+들어가기 mysql -uroot -p
+
+show databases;   -- 데이터 베이스가 뭐뭐 있는지 확인한다.
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
+| sakila             |
+| sys                |
+| world              |
++--------------------+
+
+해당 데이터 베이스 중 
+
+ex) use world 로 해당 데이터베이스로 들어간다
+
+show tables 를 하면, 해당 데이터베이스 안에 있는 테이블들을 보여준다
+
+mysql> show tables;
++-----------------+
+| Tables_in_world |
++-----------------+
+| city            |
+| country         |
+| countrylanguage |
++-----------------+
+
+해당 테이블 중 desc city(tableName 중 시티가 있다면 확인해보기 위해 넣는다)
+
+mysql> describe city;
++-------------+----------+------+-----+---------+----------------+
+| Field       | Type     | Null | Key | Default | Extra          |
++-------------+----------+------+-----+---------+----------------+
+| ID          | int      | NO   | PRI | NULL    | auto_increment |
+| Name        | char(35) | NO   |     |         |                |
+| CountryCode | char(3)  | NO   | MUL |         |                |
+| District    | char(20) | NO   |     |         |                |
+| Population  | int      | NO   |     | 0       |                |
++-------------+----------+------+-----+---------+----------------+
+
+여기서 안에 들어있는 내용을 확인하려
+
+ select * from city;
+
+이렇게 하면 해당 테이블안에 있는 내용을 알 수 있다.
+
+mysql> select * from city;
++------+-----------------------------------+-------------+----------------------+------------+
+| ID   | Name                              | CountryCode | District             | Population |
++------+-----------------------------------+-------------+----------------------+------------+
+|    1 | Kabul                             | AFG         | Kabol                |    1780000 |
+|    2 | Qandahar                          | AFG         | Qandahar             |     237500 |
+|    3 | Herat                             | AFG         | Herat                |     186800 |
+|    4 | Mazar-e-Sharif                    | AFG         | Balkh                |     127800 |
+|    5 | Amsterdam                         | NLD         | Noord-Holland        |     731200 |
+|    6 | Rotterdam                         | NLD         | Zuid-Holland         |     593321 |
+|    7 | Haag                              | NLD         | Zuid-Holland         |     440900 |
+|    8 | Utrecht                           | NLD         | Utrecht              |     234323 |
+|    9 | Eindhoven                         | NLD         | Noord-Brabant        |     201843 |
+|   10 | Tilburg                           | NLD         | Noord-Brabant        |     193238 |
+|   11 | Groningen                         | NLD         | Groningen            |     172701 |
+|   12 | Breda                             | NLD         | Noord-Brabant        |     160398 |
+|   13 | Apeldoorn                         | NLD         | Gelderland           |     153491 |
+|   14 | Nijmegen                          | NLD         | Gelderland           |     152463 |
+|   15 | Enschede                          | NLD         | Overijssel           |     149544 |
+|   16 | Haarlem                           | NLD         | Noord-Holland        |     148772 |
+|   17 | Almere                            | NLD         | Flevoland            |     142465 |
+|   18 | Arnhem                            | NLD         | Gelderland           |     138020 |
+|   19 | Zaanstad                          | NLD         | Noord-Holland        |     135621 |
