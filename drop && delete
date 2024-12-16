@@ -1,0 +1,15 @@
+--drop and delete--
+삭제
+
+삭제/수정은 완전히 조심하여 사용해야한다.
+
+drop : 완전히 구조까지 삭제
+delete: 내용만 삭제하는 것 (조건을 주는 것을 명심)
+
+//폰 번호 중에 343을 포함하는 자료를 삭제
+delete from student 
+where phone like '%343%';
+
+// 원하는 테이블을 삭제
+drop table 테이블명;
+drop database 데이터베이스명;
