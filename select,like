@@ -450,3 +450,74 @@ mysql> select name, belong from student
 | 부우      | ENGLISH |
 | 오천      | SPORTS  |
 +-----------+---------+
+
+
+//내가 원하는 걸 전부 찾아주는 방법(and)
+select * from student
+where s_id between '2008' and '2010';
+
+mysql> select * from student
+    -> where s_id between '2008' and '2010';
++----------+--------+----------+-------------+--------+
+| s_id     | name   | belong   | phone       | status |
++----------+--------+----------+-------------+--------+
+| 20080104 | 나미   | COMPUTER | 01023432432 |      3 |
+| 20080501 | 크리링 | COMPUTER | 01023436346 |      2 |
+| 20090101 | 루피   | COMPUTER | 01012345678 |      1 |
+| 20090105 | 쵸파   | MUSIC    | 01012342433 |      3 |
+| 20090301 | 에릭   | DANCE    | 01032424244 |      2 |
+| 20090302 | 전진   | COMPUTER | 01012321313 |      3 |
+| 20090503 | 피콜로 | MUSIC    | 01013634645 |      3 |
+| 20090509 | 셀     | DANCE    | 01032427535 |      3 |
++----------+--------+----------+-------------+--------+
+
+// in 구문 내가 원하는 걸 전부 다 찾아주는 방법 (or)
+select name, belong, phone from student
+where belong in('dance', 'sports');
+
+mysql> select name, belong, phone from student
+    -> where belong in('dance', 'sports');
++--------+--------+-------------+
+| name   | belong | phone       |
++--------+--------+-------------+
+| 에릭   | DANCE  | 01032424244 |
+| 셀     | DANCE  | 01032427535 |
+| 버기   | DANCE  | 01023424343 |
+| 베지터 | DANCE  | 01023423623 |
+| 상디   | SPORTS | 01021342443 |
+| 오천   | SPORTS | 01021334525 |
++--------+--------+-------------+
+
+// 한 글자인 이름을 찾는 방법
+
+mysql> select name from student
+    -> where name like '_';
++------+
+| name |
++------+
+| 셀   |
++------+
+
+// 2와 3을 포함한 값들 중
+// c가들어간 belong을 포함하여
+// name에 대해서 내림차순으로 
+// name, belong, status를 출력해라
+
+mysql> select name, belong, status from student
+    -> where status in(2,3) and belong like '%c%'
+    -> order by name desc;
++--------+----------+--------+
+| name   | belong   | status |
++--------+----------+--------+
+| 피콜로 | MUSIC    |      3 |
+| 크리링 | COMPUTER |      2 |
+| 쵸파   | MUSIC    |      3 |
+| 조로   | MUSIC    |      2 |
+| 전진   | COMPUTER |      3 |
+| 오공   | MUSIC    |      2 |
+| 에릭   | DANCE    |      2 |
+| 셀     | DANCE    |      3 |
+| 베지터 | DANCE    |      2 |
+| 버기   | DANCE    |      2 |
+| 나미   | COMPUTER |      3 |
++--------+----------+--------+
