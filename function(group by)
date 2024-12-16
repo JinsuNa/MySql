@@ -1,0 +1,130 @@
+--기본함수 ( group by 해야한다)--
+
+where: 대상만 선별
+group by: 묶을 대상을 선택
+
+group by : 연산조건으로 묶을 그룹 지정
+묶은 그룹의 결과에 대한 별도의 조건을 지정 : having (where대신에 그룹은 having을 사용한다.)
+
+sum	: 합계
+avg	: 평균
+count	: 갯수
+max	: 최댓값
+min	: 최솟값
+
+
+// 갯수를 구하는 함수 count
+
+mysql> select count(name) from student;
++-------------+
+| count(name) |
++-------------+
+|          16 |
++-------------+
+1 row in set (0.00 sec)
+
+
+// 갯수를 구하는 방법 중 2번째는 name이 아닌 * 이렇게 전체를 줘도 된다.
+
+mysql> select count(*) from student;
++----------+
+| count(*) |
++----------+
+|       16 |
++----------+
+1 row in set (0.00 sec)
+
+
+// belong이 dance만 보는 법 ( 즉 내가 원하는 데이터만 추출해서 보는 방법)
+
+mysql> select count(*) from student
+    -> where belong like '%dance%';
++----------+
+| count(*) |
++----------+
+|        5 |
++----------+
+1 row in set (0.00 sec)
+
+
+// 아래와 같이 출력하는 방법(통계함수)  <-- 그룹핑이라 한다.
+
+belong		count
+=================
+computer	4
+dance		2
+sports		3
+
+mysql> select belong as Belong, count(*) as Count from student
+    -> group by belong
+    -> order by belong;
++----------+-------+
+| Belong   | Count |
++----------+-------+
+| COMPUTER |     4 |
+| DANCE    |     5 |
+| ENGLISH  |     2 |
+| GOLF     |     1 |
+| MUSIC    |     2 |
+| SPORTS   |     2 |
++----------+-------+
+
+// 내가 만약 3이상인 belong을 얻고싶을 때 having을 사용한다.
+
+select belong as Belong, count(*) as Count from student
+group by belong
+having count>=3
+order by belong;
++----------+------------+
+| belong   | groupCount |
++----------+------------+
+| DANCE    |          5 |
+| COMPUTER |          4 |
++----------+------------+
+
+
+
+// 소속이 computer 또는 dance 그룹의 학생 수를 내림차순으로 출력하는 방법
+select belong, count(*) as groupCount from student
+where belong in ('computer','dance')
+group by belong
+having groupCount>=5
+order by groupCount desc;
++--------+------------+
+| belong | groupCount |
++--------+------------+
+| DANCE  |          5 |
++--------+------------+
+
+// 소속으로 묶어준 후에 소속인원수, status 합을 출력하는 방법
+select belong as 소속, count(*) as 인원수, sum(status) as 합 from student
+group by belong
+order by 합 desc;
+
++----------+-----------+------+
+| 소속     | 인원수    | 합   |
++----------+-----------+------+
+| COMPUTER |         4 |    9 |
+| MUSIC    |         2 |    6 |
+| DANCE    |         5 |   11 |
+| GOLF     |         1 |    2 |
+| SPORTS   |         2 |    2 |
+| ENGLISH  |         2 |    2 |
++----------+-----------+------+
+
+
+
+// 지금까지 배운 함수 count, max, min, sum, avg 에 대해 알아보기
+
+mysql> select count(*),max(status),min(status),sum(status),avg(status) from student
+    -> group by belong;
++----------+-------------+-------------+-------------+-------------+
+| count(*) | max(status) | min(status) | sum(status) | avg(status) |
++----------+-------------+-------------+-------------+-------------+
+|        4 |           3 |           1 |           9 |      2.2500 |
+|        2 |           3 |           3 |           6 |      3.0000 |
+|        5 |           3 |           2 |          11 |      2.2000 |
+|        1 |           2 |           2 |           2 |      2.0000 |
+|        2 |           1 |           1 |           2 |      1.0000 |
+|        2 |           1 |           1 |           2 |      1.0000 |
++----------+-------------+-------------+-------------+-------------+
