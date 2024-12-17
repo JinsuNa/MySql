@@ -1,0 +1,74 @@
+--inner--
+
+ex) table1, table2 에서 테이블들 중 원하는 데이터만 뽑아서 출력할 수 있다.
+
+SELECT gg._id, gg.name, s.title  
+FROM girl_group AS gg
+JOIN song AS s
+ON s._id = gg.hit_song_id;
+
+girl_group을 as를 사용하여 gg란 이름으로 설정하였고
+song 도 s라 설정하여 song의 id를 girl_group의 hit_song_id로 변경하였다.
+마지막 on은 조건문이다. where도 사용가능하다.
+s._id 와 gg.hit_song_id와 같은 부분을 찾아 달라는거다.
+
++-----+--------------------------+--------------+
+| _id | name                     | title        |
++-----+--------------------------+--------------+
+|   1 | 원더걸스                 | Tell Me      |
+|   2 | 소녀시대                 | Gee          |
+|   3 | 카라                     | 미스터       |
+|   4 | 브라운아이드걸스         | Abracadabra  |
+|   5 | 다비치                   | 8282         |
+|   6 | 2NE1                     | I Don't car  |
+|   7 | f(x)                     | 피노키오     |
+|   8 | 시크릿                   | 별빛달빛     |
+|   9 | 레인보우                 | A            |
++-----+--------------------------+--------------+
+
+// from 부분의 테이블과 교집합일 때 null까지 출력하는 법 (a와 a와 b의 교집합)
+
+mysql> select gg._id, gg.name, s.title
+    -> from girl_group as gg
+    -> left outer join song as s
+    -> on s._id = gg.hit_song_id;
++-----+--------------------------+--------------+
+| _id | name                     | title        |
++-----+--------------------------+--------------+
+|   1 | 원더걸스                 | Tell Me      |
+|   2 | 소녀시대                 | Gee          |
+|   3 | 카라                     | 미스터       |
+|   4 | 브라운아이드걸스         | Abracadabra  |
+|   5 | 다비치                   | 8282         |
+|   6 | 2NE1                     | I Don't car  |
+|   7 | f(x)                     | 피노키오     |
+|   8 | 시크릿                   | 별빛달빛     |
+|   9 | 레인보우                 | A            |
+|  10 | 에프터 스쿨              | NULL         |
+|  11 | 포미닛                   | NULL         |
++-----+--------------------------+--------------+
+
+// join부분의 테이블과 교집합일 때 null까지 출력하는 법 (b와 b와 a의 교집합)
+
+mysql> select gg._id, gg.name, s.title
+    -> from girl_group as gg
+    -> left outer join song as s
+    -> on s._id = gg.hit_song_id;
++-----+--------------------------+--------------+
+| _id | name                     | title        |
++-----+--------------------------+--------------+
+|   1 | 원더걸스                 | Tell Me      |
+|   2 | 소녀시대                 | Gee          |
+|   3 | 카라                     | 미스터       |
+|   4 | 브라운아이드걸스         | Abracadabra  |
+|   5 | 다비치                   | 8282         |
+|   6 | 2NE1                     | I Don't car  |
+|   7 | f(x)                     | 피노키오     |
+|   8 | 시크릿                   | 별빛달빛     |
+|   9 | 레인보우                 | A            |
+|  10 | 에프터 스쿨              | NULL         |
+|  11 | 포미닛                   | NULL         |
++-----+--------------------------+--------------+
+
+// 이중for loop 같은 느낌인데 내일 물어보자
+
