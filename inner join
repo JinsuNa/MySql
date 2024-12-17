@@ -72,3 +72,18 @@ mysql> select gg._id, gg.name, s.title
 
 // 이중for loop 같은 느낌인데 내일 물어보자
 
+// 한 테이블 안에서도 join이 가능하다 예를들어 어떤 사원의 사수를 알아보고 싶을 때 사용
+
+
+select em1.id, em1.name, em2.name
+from employee em1
+join employee em2
+on em1.superior_id = em2.id;
+
++----+-----------+-----------+
+| id | name      | name      |
++----+-----------+-----------+
+|  2 | 정과장    | 김사장    |
+|  3 | 최대리    | 정과장    |
+|  4 | 이대리    | 정과장    |
++----+-----------+-----------+
