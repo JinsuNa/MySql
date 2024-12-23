@@ -40,8 +40,8 @@ emp_name varchar(10) not null,
 dep_num int,
 position varchar(10) not null,
 salary int,
-hire_date date default now(),
-jumin_num char(13) not null,
+hire_date timestamp default current_timestamp,
+jumin_num char(13) not null unique,
 phone_num varchar(15) not null,
 mgr_emp_no int,
 foreign key (dep_num) references dept(dep_num));
@@ -72,9 +72,16 @@ values('홍길동', 10, '사장', 5000, '1980-01-01','7211271109410', '010996995
 salary_grade tabe
 
 create table salary_grade(
-sal_grade_num int primary key auto_increment,
+sal_grade_num int primary key,
 min_sal int not null,
 max_sal int not null);
+
+insert into salary_grade(sal_grade_num, min_sal, max_sal)
+values(1, 8001, 10000),
+(2, 6001, 8000),
+(3, 4001, 6000),
+(4, 2001, 4000),
+(5, 1000, 2000);
 
 
 customer
@@ -86,3 +93,220 @@ tel_num varchar(15),
 jumin_num char(13) not null,
 emp_num int default 0,
 foreign key (emp_num) references employee(emp_num));
+
+insert into customer(cus_name, tel_num, jumin_num, emp_num)
+values('류민이', '123-1234', '7001131537915', 3),
+('이강민', '343-1454', '6902161627914', 2),
+('이영희', '144-1655', '7503202636215', NULL),
+('김철이', '673-1674', '7704301234567', 4),
+('박류완', '123-1674', '7205211123675', 3),
+('서캔디', '673-1764', '6507252534566', NULL),
+('신똘이', '176-7677', '0006083648614', 7),
+('도쇠돌', '123-6774', '0008041346574', 9),
+('권홍이', '767-1234', '7312251234689', 13);
+
+table 종류 dept(부서), employee(직원), customer(고객), salary_grade
+
+1. 부서 테이블의 모든 정보를 보이시오.
+select * from dept;
+
+2. 부서테이블의 부서ID와 위치를 출력하시오.
+select dep_num as 부서ID, loc as 위치 from dept;
+
+3. 직원테이블에서 이름과 급여, 급여에 300을 더해 인센티브로 필드명을 부여해 출력하시오. 
+select emp_name as 이름, salary as 급여, salary + 300 as 인센티브 from employee; 
+
+4. 직원테이블의 이름과 매니저 번호를 출력하고 매니저 번호가 NULL이면 '없음' 으로
+출력하시오. IFNULL(필드명, NULL일경우 처리값) 함수 이용
+select emp_name as 이름, ifnull(mgr_emp_no, '없음') as 매니저_번호 from employee;
+
+5. 부서 테이블의 부서명과 위치를 하나의 열에 출력하시오.(Concat()) 함수 이용
+단, 부서명과 위치는 공백으로 구분하시오.(총무부 서울)
+select concat(dep_name, ' ', loc) as 부서명과_위치 from dept;
+
+6. 부서ID가 30 인 직원의 정보를 모두 출력하시오.
+select * from employee
+where dep_num like '%30%';
+
+7. 직원들의 정보를 출력하되 부서별로 같은 부서의 사람들은 가장 최근에 입사한 사람 순서로 출력하시오. 
+select * from employee
+order by dep_num, hire_date desc;
+
+8. 직원테이블에서 김씨성을 갖는 사람들의 정보를 출력하시오
+select * from employee
+where emp_name like '김%';
+
+9. 직원테이블에서 1990년에 채용된 사람들의 정보를 출력하시오.
+select * from employee
+where hire_date like '%1996%';
+
+10. 직원테이블에서 전화번호 뒷자리가 '8075'인 사람의 정보를 출력하시오.
+select * from employee
+where phone_num like '%8075';
+
+11. 직원테이블에서 급여가 1200 보다 작은 사람의 정보를 출력하시오.
+select * from employee
+where salary < 1200;
+
+12. 직원테이블에서 대리 또는 과장의 정보를 출력하시오
+select * from employee
+where position like '%대리%' or position like '%과장%';
+
+13. 직원테이블에서 매니저 값이 널(NULL) 값을 갖는 자료를 출력하시오.
+select * from employee
+where mgr_emp_no is null;
+
+14. 직원테이블에서 직원ID, 이름, 직위, 급여를 출력하시오
+ (조건 : 급여가 2000 이상이고 부서코드가 20)
+select emp_num as 직원ID, emp_name as 이름, position as 직위, salary as 급여 from employee
+where salary>=2000 and dep_num like '%20%';
+
+15. 직원테이블에서 부서코드가 10, 20 인 사람들을 제외하고 출력하시오. 
+select * from employee
+where dep_num not in('10','20');
+
+16. 직원 테이블에서 자료를 출력하되 다음의 조건으로 출력하시오. - 직위 필드에 ‘장’을 포함하는 자료를
+- 이름과 직위을 묶어서 NAME이라는 필드명으로 - 이름의 길이 출력 : 이름길이 라는 필드명
+- 주민번호 중 숫자 ‘9’가 첫번째로 나타나는 위치를 Contains ‘9’? 라는 필드명으로출력하시오. (Instr 함수)
+select emp_num as 숫자, concat(emp_name,' ', position)as NAME, char_length(concat(emp_name,' ', position)) as 이름길이, dep_num as 부서번호, position as 직위, salary as 연봉, hire_date as 고용날짜, jumin_num as 주민번호, phone_num as 핸드폰번호, mgr_emp_no as 매니저번호 from employee
+where position like '%장';
+
+17. 직원테이블에서 급여를 1000 으로 나눈 나머지 값 출력
+select salary % 1000 from employee;
+
+18. 직원테이블에서 직원의 근무 년수가 30년 이상인 사람을 구하여 '30년 이상 근속자'라는 필드로 출력하시오.
+select emp_name as 30년_이상_근속자 from employee
+where timestampdiff(year, hire_date, curdate() ) >= 30;
+
+19. 직원 테이블에서 직원들의 급여평균, 급여총액, 전체직원 수를 구하시오.
+select avg(salary) as 급여평균, sum(salary) as 급여총액, count(emp_num) as 전체직원_수 from employee;
+
+20. 직원 테이블에서 직원들의 급여평균, 급여총액, 전체직원 수를 부서별로 구하시오.
+select d.dep_name as 부서이름, avg(e.salary) as 급여평균, sum(e.salary) as 급여총액, count(e.emp_num) as 전체직원_수
+from employee as e
+join dept as d 
+on d.dep_num = e.dep_num
+group by e.dep_num;
+
+21. 직원 테이블에서 가장 처음과 가장 마지막 입사날짜를 출력하시오.
+select max(hire_date) as 가장_최근_입사일, min(hire_date) as 가장_마지막_입사일 from employee;
+
+22. 직원테이블에서 부서ID 별 평균 급여를 출력하시오.
+select dep_num as 부서ID, avg(salary) as 부서ID_별_평균_급여 from employee
+group by 부서ID
+order by dep_num;
+
+23. 직원테이블에서 부서ID별, 직위별 급여의 합계를 구하시오.
+select dep_num as 부서ID별_직위별, sum(salary) as 급여합계 from employee
+group by dep_num
+union
+select position, sum(salary) from employee
+group by position;
+
+24. 부서ID 별 급여의 합계를 구하고 합계가 17300 이상인 자료만 출력하시오.
+select dep_num as 부서ID, sum(salary) as 합계 from employee
+group by dep_num
+having sum(salary)>=17300;
+
+25. 부서ID 별 급여의 합계를 구하고 합계가 17300 이상인 자료만 출력하되 내림차순
+으로 하시오. 
+
+select dep_num as 부서ID, sum(salary) as 합계 from employee
+group by dep_num
+having sum(salary)>=17300
+order by 합계 desc;
+
+26. 부서ID 별 평균급여의 가장 큰 값을 출력하시오. (서브쿼리 사용)
+select max(평균급여) as 최대평균급여
+from (
+    select avg(salary) as 평균급여
+    from employee
+    group by dep_num
+) as subquery;
+
+27. 직원 중 '공부만' 보다 급여를 많이 받는 사람의 이름과 급여를 출력하시오. (단, subquery를 사용하시오.)
+select emp_name as 이름, salary as 급여 from employee
+where salary > (
+select salary from employee
+where emp_name = '공부만'
+);
+
+28. 직원 테이블에서 직원ID가 13번인 직원의 직위과 같고, 직원ID 가 17번인 직원의
+급여보다 큰 직원들의 정보를 이름, 직위, 급여의 순으로 출력하는 쿼리를 작성하시오. (단, subquery를 사용하시오.)
+
+select emp_name as 이름, position as 직위, salary as 급여 from employee
+where position = (
+select position from employee
+where emp_num = 13
+) and
+salary > (
+select salary from employee
+where emp_num = 17
+);
+
+29. 직원 중 급여가 가장 적은 사람의 정보를 이름, 직위, 급여를 출력하시오. (단, subquery를 사용하시오.)
+select emp_name as 이름, position as 직위, salary as 급여 from employee
+where salary = (select min(salary) from employee);
+
+30. 각 부서의 최소 급여 중 30번 부서의 최소 급여보다 많은 타 부서의 최소급여를
+부서ID, 최소급여의 순서로 출력하시오. (단, subquery를 사용하시오.)
+select dep_num as 부서ID, min(salary) as 최소_급여 from employee
+group by dep_num
+having 최소_급여 > (
+select min(salary) from employee
+where dep_num like '30');
+
+31. 직원테이블에서 사원의 평균급여보다 크고 과장의 평균급여보다 작은 직원이름과
+급여를 출력하시오. (단, subquery를 사용하시오.)
+
+'사원' position의 평균을 내는방법이다.
+
+select position, avg(salary) from employee
+group by position
+having position like '사원';
+========================
+select emp_name as 이름, salary as 급여 from employee
+where salary > (select avg(salary) from employee where position = '사원')
+and salary < (select avg(salary) from employee where position = '과장');
+
+
+select emp_name as 이름, salary as 급여 from employee
+where salary > (
+select avg(salary) from employee
+group by position
+having position like '사원') and
+salary < (
+select avg(salary) from employee
+group by position
+having position like '과장');
+
+
+32. 직원 중 '놀기만'과 '류별나'의 부서ID 를 40 으로 변경하시오.
+update employee set dep_num = 40
+where emp_name in ('놀기만', '류별나');
+
+33. 직원 중 '놀기만'의 salary와 직위을 '공부해'의 salary와 직위으로 바꾸시오. (단, subquery를 사용하시오.)
+update employee set salary = (
+select salary from employee
+where emp_name = '놀기만'
+)
+where emp_name = '공부해';
+
+이렇게 하면 from절에 같은 테이블을 참조하려고 해 에러가 발생한다.
+그러면 join을 사용하면 된다.
+
+update employee as e1
+join employee as e2
+on e2.emp_name = '놀기만'
+set e1.salary = e2.salary
+where e1.emp_name = '공부해';
+
+34. 다음의 내용을 부서테이블과 직원테이블에 각각 삽입하시오.
+- 부서 : 50, '기획부', '제주'
+- 직원 : '말똥이', 50, '과장', 4200,'1993-01-03','8911232452719', '01990084876', 13
+
+insert into dept(dep_num, dep_name, loc)
+values(50, '기획부', '제주');
+
+insert into employee(emp_name, dep_num, position, salary, hire_date, jumin_num, phone_num, mgr_emp_no)
+values('말똥이', 50, '과장', 4200,'1993-01-03','8911232452719', '01990084876', 13);
