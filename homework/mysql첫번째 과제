@@ -310,3 +310,82 @@ values(50, '기획부', '제주');
 
 insert into employee(emp_name, dep_num, position, salary, hire_date, jumin_num, phone_num, mgr_emp_no)
 values('말똥이', 50, '과장', 4200,'1993-01-03','8911232452719', '01990084876', 13);
+
+35. 지역이 제주인 부서의 직원 데이터를 삭제하시오. (단, subquery를 사용하시오.)
+delete from employee
+where dep_num = 50;
+
+36. 직원의 이름과 부서명, 지역을 출력하시오.
+select e.emp_name as 이름, d.dep_name as 부서명, d.loc as 지역 from employee as e
+inner join dept as d
+on e.dep_num = d.dep_num;
+
+37. 직원이 담당자로 배정 된 고객 데이터 내에서 
+고객이름, 담당자 이름, 담당자 직위, 부서명을 순서대로 출력하시오.
+
+select c.cus_name as 고객이름, e.emp_name as 담당자_이름, e.position as 담당자_직위, d.dep_name as 부서명 from customer as c
+inner join employee as e
+on c.emp_num = e.emp_num
+left join dept as d
+on e.dep_num = d.dep_num;
+
+38. 고객이 할당되어 있는 직원의 이름이 한번만 출력하되 내림차순으로 출력하시오. (distinct 키워드 사용)
+select distinct e.emp_name as 직원의_이름, e.emp_num as 고객번호 from employee as e
+inner join customer as c
+on c.emp_num = e.emp_num
+order by e.emp_num desc;
+
+39. 지역별로 근무중인 직원들의 수를 지역, 직원수 필드로 출력하시오. 
+select d.loc as 지역, count(e.emp_name) as 직원수 from dept as d
+inner join employee as e
+on d.dep_num = e.dep_num
+group by d.loc
+order by 직원수;
+
+40. 직위별로 각 지역에 근무하는 근무자 수를 지역, 근무자 수 필드로 출력하시오
+select e.position as 직위, d.loc as 지역, count(e.emp_name) as 근무자_수 from employee as e
+inner join dept as d
+on e.dep_num = d.dep_num
+group by 직위, 지역;
+
+41. 몇 년도에 몇 명이 입사했는지 영업부의 입사년도에 따른 입사자 수를 년도의 내림차순으로 구하시오.(필드명 : 입사년도, 입사자 수)
+select e.emp_name as 이름, d.dep_name as 부서, e.position as 직위, e.hire_date as 입사일 from employee as e
+inner join dept as d
+on e.dep_num = d.dep_num
+where d.dep_name = '영업부';
+
+select year(e.hire_date) as 입사년도, count(*) as 입사자_수 from employee as e
+inner join dept as d
+on d.dep_num = e.dep_num
+where d.dep_name = '영업부'
+group by year(e.hire_date);
+
+42. 담당직원이 있는 고객 중 고객이름과 고객이 방문해야할 지역을 출력하시오. (필드명: 고객명, 방문지역)
+select distinct c.cus_name as 고객명, d.loc as 방문지역 from customer as c
+inner join employee as e
+on e.emp_num = c.emp_num
+left join dept as d
+on d.dep_num = e.dep_num;
+
+43. 직원의 이름과 담당 매니저 이름, 담당 매니저 직위를 출력하시오(셀프조인)
+select e1.emp_name as 직원이름, e2.emp_name as 담당_매니저_이름, e2.position as 담당_매니저_직위 from employee as e1
+inner join employee as e2
+on e2.emp_num = e1.mgr_emp_no;
+
+44. dept 테이블에 - 부서 : 1000, '인사부', '서울' 데이터를 입력한 후 Select 구문으로 전체 dept 테이블
+내용을 검색한 후 RollBack 하는 과정을 쿼리로 작성하고 실행 결과를 첨부하시오.
+
+start transaction;
+
+insert into dept(dep_num, dep_name, loc)
+values(1000, '인사부', '서울');
+
+select * from dept;
+
+rollback;
+
+select * from dept;
+
+45. salary_grade 테이블에 bigo 필드를 맨 뒤에 삽입하시오. (필드 타입 : varchar(255))
+
+alter table salary_grade add column bigo varchar(255);
